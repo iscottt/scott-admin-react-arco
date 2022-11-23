@@ -43,7 +43,7 @@ yarn build
 
 ## Git 提交规范
 
-- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular))规范
+- 参考 [vue](https://github.com/vuejs/vue/blob/dev/.github/COMMIT_CONVENTION.md) 规范 ([Angular](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-angular)规范)
 
   - `feat` 🎉 增加新功能
   - `fix` 🔨 修复问题/BUG
