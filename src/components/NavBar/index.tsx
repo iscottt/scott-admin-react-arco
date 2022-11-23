@@ -4,7 +4,6 @@ import {
   Avatar,
   Dropdown,
   Menu,
-  Divider,
   Message,
 } from '@arco-design/web-react';
 import {
@@ -63,7 +62,7 @@ function Navbar({ show }: { show: boolean }) {
       <div className={styles.left}>
         <div className={styles.logo}>
           <Logo />
-          <div className={styles['logo-name']}>Arco Pro</div>
+          <div className={styles['logo-name']}>Scott Admin</div>
         </div>
       </div>
       <ul className={styles.right}>
