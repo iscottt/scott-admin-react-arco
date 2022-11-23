@@ -1,8 +1,7 @@
-import auth, { AuthParams } from '@/utils/authentication';
-import axios from 'axios';
+import auth from '@/utils/authentication';
 import { useEffect, useMemo, useState } from 'react';
 
-export type IRoute = AuthParams & {
+export type IRoute = {
   name: string;
   key: string;
   // 当前页是否展示面包屑
@@ -23,36 +22,8 @@ export const getName = (path: string, routes) => {
   });
 };
 
-
 // 实际菜单渲染
 const useRoute = (userPermission, dynamicRoutes = []): [IRoute[], string] => {
-  const filterRoute = (routes: IRoute[], arr = []): IRoute[] => {
-    // 如果没有路由，返回空数组
-    if (!routes.length) {
-      return [];
-    }
-    for (const route of routes) {
-      const { requiredPermissions, oneOfPerm } = route;
-      let visible = true;
-      if (requiredPermissions) {
-        visible = auth({ requiredPermissions, oneOfPerm }, userPermission);
-      }
-
-      if (!visible) {
-        continue;
-      }
-      if (route.children && route.children.length) {
-        const newRoute = { ...route, children: [] };
-        filterRoute(route.children, newRoute.children);
-        if (newRoute.children.length) {
-          arr.push(newRoute);
-        }
-      } else {
-        arr.push({ ...route });
-      }
-    }
-    return arr;
-  };
   const [permissionRoute, setPermissionRoute] = useState(dynamicRoutes);
   useEffect(() => {
     const newRoutes = dynamicRoutes;
