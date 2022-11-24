@@ -145,12 +145,10 @@ function PageLayout() {
             {iconDom} {route.name}
           </>
         );
-
         routeMap.current.set(
           `/${route.key}`,
           breadcrumb ? [...parentNode, route.name] : []
         );
-
         const visibleChildren = (route.children || []).filter((child) => {
           const { ignore, breadcrumb = true } = child;
           if (ignore || route.ignore) {
@@ -204,7 +202,7 @@ function PageLayout() {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
     updateMenuStatus();
-  }, [pathname]);
+  }, [flattenRoutes]);
 
   return (
     <Layout className={styles.layout}>
