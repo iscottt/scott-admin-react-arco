@@ -32,18 +32,17 @@ function Index() {
     });
   }
 
-  function fetchRouters() {
+  async function fetchRouters() {
     store.dispatch({
       type: 'update-userInfo',
       payload: { userLoading: true },
     });
-    axios.get('/api/user/getRouters').then((res) => {
-      store.dispatch({
-        type: 'update-dynamicRoutes',
-        payload: { dynamicRoutes: res.data },
-      });
-      fetchUserInfo();
+    const { data } = await axios.get('/api/user/getRouters');
+    store.dispatch({
+      type: 'update-dynamicRoutes',
+      payload: { dynamicRoutes: data },
     });
+    fetchUserInfo();
   }
 
   useEffect(() => {

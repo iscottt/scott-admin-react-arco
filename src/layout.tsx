@@ -151,7 +151,7 @@ function PageLayout() {
     setCollapsed((collapsed) => !collapsed);
   }
   // 渲染菜单项
-  function renderRoutes() {
+  const renderRoutes = () => {
     routeMap.current.clear();
     return function travel(_routes: IRoute[], level, parentNode = []) {
       return _routes.map((route) => {
@@ -193,7 +193,7 @@ function PageLayout() {
         return <MenuItem key={route.key}>{titleDom}</MenuItem>;
       });
     };
-  }
+  };
   // 更新菜单选中项和打开项
   function updateMenuStatus() {
     const pathKeys = pathname.split('/');
