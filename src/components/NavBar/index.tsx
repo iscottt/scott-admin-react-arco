@@ -23,7 +23,7 @@ import styles from './style/index.module.less';
 import useStorage from '@/hooks/useStorage';
 import screenfull from 'screenfull';
 
-function Navbar({ show }: { show: boolean }) {
+function Navbar() {
   const { userInfo, userLoading } = useSelector((state: GlobalState) => state);
 
   const [_, setUserStatus] = useStorage('userStatus');

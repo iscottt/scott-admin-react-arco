@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
-import cs from 'classnames';
 import {
   IconDashboard,
   IconList,
@@ -21,7 +20,6 @@ import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import useRoute, { IRoute } from '@/routes';
 import { isArray } from './utils/is';
-import getUrlParams from './utils/getUrlParams';
 import lazyload from './utils/lazyload';
 import { GlobalState } from './store';
 import styles from './style/layout.module.less';
@@ -32,6 +30,11 @@ const SubMenu = Menu.SubMenu;
 const Sider = Layout.Sider;
 const Content = Layout.Content;
 
+/**
+ * 生成图标
+ * @param key
+ * @returns
+ */
 function getIconFromKey(key) {
   switch (key) {
     case 'dashboard':
@@ -54,7 +57,11 @@ function getIconFromKey(key) {
       return <div className={styles['icon-empty']} />;
   }
 }
-
+/**
+ * 根据路由配置生成菜单
+ * @param routes
+ * @returns
+ */
 function getFlattenRoutes(routes) {
   const mod = import.meta.glob('./pages/**/[a-z[]*.tsx');
   const res = [];
@@ -84,40 +91,51 @@ function getFlattenRoutes(routes) {
   travel(routes);
   return res;
 }
-
+/**
+ * Layout组件主体
+ * @returns
+ */
 function PageLayout() {
-  const urlParams = getUrlParams();
   const history = useHistory();
+  // 路由地址
   const pathname = history.location.pathname;
+  // component地址（路由地址去掉开头的'/'）
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
-  const { settings, userLoading, userInfo, dynamicRoutes } = useSelector(
+  // 获取用于页面加载时的loading，用户信息，后端返回的动态路由
+  const { userLoading, userInfo, dynamicRoutes } = useSelector(
     (state: GlobalState) => state
   );
+  // 获取筛选后的路由列表
   const [routes, defaultRoute] = useRoute(userInfo?.permissions, dynamicRoutes);
+  // 设置菜单的默认选中项
   const defaultSelectedKeys = [currentComponent || defaultRoute];
+  // 获取路径集合
   const paths = (currentComponent || defaultRoute).split('/');
+  // 设置菜单默认打开项
   const defaultOpenKeys = paths.slice(0, paths.length - 1);
-
+  // 面包屑列表
   const [breadcrumb, setBreadCrumb] = useState([]);
+  // 侧边栏是否收起
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  // 菜单选中项
   const [selectedKeys, setSelectedKeys] =
     useState<string[]>(defaultSelectedKeys);
+  // 菜单打开项
   const [openKeys, setOpenKeys] = useState<string[]>(defaultOpenKeys);
 
   const routeMap = useRef<Map<string, React.ReactNode[]>>(new Map());
   const menuMap = useRef<
     Map<string, { menuItem?: boolean; subMenu?: boolean }>
   >(new Map());
-
+  // 一些动态样式的设置
   const navbarHeight = 60;
-  const menuWidth = collapsed ? 48 : settings.menuWidth;
-
-  const showNavbar = settings.navbar && urlParams.navbar !== false;
-  const showMenu = settings.menu && urlParams.menu !== false;
-  const showFooter = settings.footer && urlParams.footer !== false;
-
+  const menuWidth = collapsed ? 48 : 220;
+  const paddingLeft = { paddingLeft: menuWidth };
+  const paddingTop = { paddingTop: navbarHeight };
+  const paddingStyle = { ...paddingLeft, ...paddingTop };
+  // 获取扁平化的路由列表
   const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
-
+  // 菜单点击事件
   function onClickMenuItem(key) {
     let currentRoute = flattenRoutes.find((r) => r.key === key);
     const component = currentRoute.component;
@@ -128,15 +146,11 @@ function PageLayout() {
       NProgress.done();
     });
   }
-
+  // 收起侧边栏
   function toggleCollapse() {
     setCollapsed((collapsed) => !collapsed);
   }
-
-  const paddingLeft = showMenu ? { paddingLeft: menuWidth } : {};
-  const paddingTop = showNavbar ? { paddingTop: navbarHeight } : {};
-  const paddingStyle = { ...paddingLeft, ...paddingTop };
-
+  // 渲染菜单项
   function renderRoutes() {
     routeMap.current.clear();
     return function travel(_routes: IRoute[], level, parentNode = []) {
@@ -180,7 +194,7 @@ function PageLayout() {
       });
     };
   }
-
+  // 更新菜单选中项和打开项
   function updateMenuStatus() {
     const pathKeys = pathname.split('/');
     const newSelectedKeys: string[] = [];
@@ -200,7 +214,7 @@ function PageLayout() {
     setSelectedKeys(newSelectedKeys);
     setOpenKeys(newOpenKeys);
   }
-
+  // 监听路由变化，改变菜单选中项和打开项以及面包屑列表
   useEffect(() => {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
@@ -209,46 +223,40 @@ function PageLayout() {
 
   return (
     <Layout className={styles.layout}>
-      <div
-        className={cs(styles['layout-navbar'], {
-          [styles['layout-navbar-hidden']]: !showNavbar,
-        })}
-      >
-        <Navbar show={showNavbar} />
+      <div className={styles['layout-navbar']}>
+        <Navbar />
       </div>
       {userLoading ? (
         <Spin className={styles['spin']} />
       ) : (
         <Layout>
-          {showMenu && (
-            <Sider
-              className={styles['layout-sider']}
-              width={menuWidth}
-              collapsed={collapsed}
-              onCollapse={setCollapsed}
-              trigger={null}
-              collapsible
-              breakpoint="xl"
-              style={paddingTop}
-            >
-              <div className={styles['menu-wrapper']}>
-                <Menu
-                  collapse={collapsed}
-                  onClickMenuItem={onClickMenuItem}
-                  selectedKeys={selectedKeys}
-                  openKeys={openKeys}
-                  onClickSubMenu={(_, openKeys) => {
-                    setOpenKeys(openKeys);
-                  }}
-                >
-                  {renderRoutes()(routes, 1)}
-                </Menu>
-              </div>
-              <div className={styles['collapse-btn']} onClick={toggleCollapse}>
-                {collapsed ? <IconMenuUnfold /> : <IconMenuFold />}
-              </div>
-            </Sider>
-          )}
+          <Sider
+            className={styles['layout-sider']}
+            width={menuWidth}
+            collapsed={collapsed}
+            onCollapse={setCollapsed}
+            trigger={null}
+            collapsible
+            breakpoint="xl"
+            style={paddingTop}
+          >
+            <div className={styles['menu-wrapper']}>
+              <Menu
+                collapse={collapsed}
+                onClickMenuItem={onClickMenuItem}
+                selectedKeys={selectedKeys}
+                openKeys={openKeys}
+                onClickSubMenu={(_, openKeys) => {
+                  setOpenKeys(openKeys);
+                }}
+              >
+                {renderRoutes()(routes, 1)}
+              </Menu>
+            </div>
+            <div className={styles['collapse-btn']} onClick={toggleCollapse}>
+              {collapsed ? <IconMenuUnfold /> : <IconMenuFold />}
+            </div>
+          </Sider>
           <Layout className={styles['layout-content']} style={paddingStyle}>
             <div className={styles['layout-content-wrapper']}>
               {!!breadcrumb.length && (
@@ -281,7 +289,7 @@ function PageLayout() {
                 </Switch>
               </Content>
             </div>
-            {showFooter && <Footer />}
+            <Footer />
           </Layout>
         </Layout>
       )}
