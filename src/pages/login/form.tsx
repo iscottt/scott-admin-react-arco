@@ -68,7 +68,7 @@ export default function LoginForm() {
   }, [loginParams]);
 
   return (
-    <div className={styles['login-form-wrapper']}>
+    <div className="w-320px">
       <div className={styles['login-form-title']}>Scott admin</div>
       <Form
         className={styles['login-form']}

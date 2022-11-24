@@ -10,6 +10,8 @@ import axios from 'axios';
 import rootReducer from './store';
 import PageLayout from './layout';
 import { GlobalContext } from './context';
+// 导入windicss
+import 'virtual:windi.css';
 import Login from './pages/login';
 import checkLogin from './utils/checkLogin';
 import changeTheme from './utils/changeTheme';

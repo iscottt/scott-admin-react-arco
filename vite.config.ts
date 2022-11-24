@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import svgrPlugin from '@arco-plugins/vite-plugin-svgr';
+import WindiCSS from 'vite-plugin-windicss';
 import vitePluginForArco from '@arco-plugins/vite-react';
 import setting from './src/settings.json';
 
@@ -10,6 +11,7 @@ export default defineConfig({
     alias: [{ find: '@', replacement: '/src' }],
   },
   plugins: [
+    WindiCSS(),
     react(),
     svgrPlugin({
       svgrOptions: {},
