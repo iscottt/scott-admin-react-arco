@@ -32,6 +32,10 @@ if (!isSSR) {
                 name: '工作台',
                 key: 'dashboard/workplace',
               },
+              {
+                name: '监控台',
+                key: 'dashboard/monitor',
+              },
             ],
           },
           {

@@ -68,8 +68,11 @@ function getFlattenRoutes(routes) {
           route.component = lazyload(mod[`./pages/${route.key}/index.tsx`]);
           res.push(route);
         } catch (e) {
-          console.log(route.key);
-          console.error(e);
+          route.component = lazyload(mod[`./pages/exception/404/index.tsx`]);
+          res.push(route);
+          console.warn(
+            `No corresponding component is found for this key: ${route.key}`
+          );
         }
       }
 
@@ -116,7 +119,7 @@ function PageLayout() {
   const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
 
   function onClickMenuItem(key) {
-    const currentRoute = flattenRoutes.find((r) => r.key === key);
+    let currentRoute = flattenRoutes.find((r) => r.key === key);
     const component = currentRoute.component;
     const preload = component.preload();
     NProgress.start();
@@ -202,7 +205,7 @@ function PageLayout() {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
     updateMenuStatus();
-  }, [flattenRoutes]);
+  }, [pathname, flattenRoutes]);
 
   return (
     <Layout className={styles.layout}>
