@@ -1,15 +1,20 @@
 .container {
   display: flex;
+  width: 100vw;
+  max-width: initial;
   height: 100vh;
-
-  .banner {
-    width: 550px;
-    background: linear-gradient(163.85deg, #1d2129 0%, #00308f 100%);
-  }
+  background-image: url('@/assets/login_bg.svg');
+  background-position: 50%;
+  background-size: 100% 100%;
+  background-size: cover;
+  background-color: #f0f2f5;
 
   .content {
-    flex: 1;
     position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding-bottom: 40px;
   }
 
@@ -18,70 +23,6 @@
     position: absolute;
     bottom: 0;
     right: 0;
-  }
-}
-
-.logo {
-  position: fixed;
-  top: 24px;
-  left: 22px;
-  display: inline-flex;
-  align-items: center;
-  z-index: 1;
-
-  &-text {
-    margin-left: 4px;
-    margin-right: 4px;
-    font-size: 20px;
-    color: var(--color-fill-1);
-  }
-}
-
-.banner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &-inner {
-    height: 100%;
-    flex: 1;
-  }
-}
-
-.content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel {
-  height: 100%;
-
-  &-item {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-
-  &-title {
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-    color: var(--color-fill-1);
-  }
-
-  &-sub-title {
-    margin-top: 8px;
-    font-size: 14px;
-    line-height: 22px;
-    color: var(--color-text-3);
-  }
-
-  &-image {
-    margin-top: 30px;
-    width: 320px;
   }
 }
 
@@ -95,6 +36,7 @@
     font-weight: 500;
     color: var(--color-text-1);
     line-height: 32px;
+    margin-bottom: 15px;
   }
 
   &-sub-title {

@@ -2,9 +2,9 @@ import {
   Form,
   Input,
   Checkbox,
-  Link,
   Button,
   Space,
+  Message,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
@@ -15,7 +15,6 @@ import styles from './style/index.module.less';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
-  const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [loginParams, setLoginParams, removeLoginParams] =
     useStorage('loginParams');
@@ -36,7 +35,6 @@ export default function LoginForm() {
   }
 
   function login(params) {
-    setErrorMessage('');
     setLoading(true);
     axios
       .post('/api/user/login', params)
@@ -45,7 +43,7 @@ export default function LoginForm() {
         if (status === 'ok') {
           afterLoginSuccess(params);
         } else {
-          setErrorMessage(msg || '登录出错，请刷新重试');
+          Message.info(msg || '登录出错，请刷新重试');
         }
       })
       .finally(() => {
@@ -71,9 +69,7 @@ export default function LoginForm() {
 
   return (
     <div className={styles['login-form-wrapper']}>
-      <div className={styles['login-form-title']}>登录 Arco Design Pro</div>
-      <div className={styles['login-form-sub-title']}>登录 Arco Design Pro</div>
-      <div className={styles['login-form-error-msg']}>{errorMessage}</div>
+      <div className={styles['login-form-title']}>Scott admin</div>
       <Form
         className={styles['login-form']}
         layout="vertical"
